@@ -33,6 +33,18 @@ app.go             # Wails adapter (тонкий фасад)
 | **I** | Узкие интерфейсы: `ServerRepository`, `HealthChecker`, `HealthCheckerRegistry` |
 | **D** | Сервисы зависят от `domain.*`, не от LevelDB |
 
+## Git Flow
+
+| Ветка | Назначение |
+|-------|------------|
+| `main` | Стабильные релизы (`v1.0.0`, `v1.0.1`) |
+| `develop` | Интеграция фич |
+| `feature/*` | Новая функциональность → merge в `develop` |
+| `release/*` | Подготовка релиза → `main` + `develop` |
+| `hotfix/*` | Срочные правки от `main` → `main` + `develop` |
+
+Текущая рабочая ветка: **`develop`**. Пересборка истории: `scripts/rebuild-gitflow.sh`.
+
 ## Запуск
 
 ```bash
