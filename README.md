@@ -24,6 +24,7 @@ Desktop-приложение для мониторинга кластера Linu
 - [Структура проекта](#структура-проекта)
 - [Сборка и разработка](#сборка-и-разработка)
 - [Модульное тестирование](#модульное-тестирование)
+- [Тестирование desktop (ОС, ФС, инсталлятор)](#тестирование-desktop-ос-фс-инсталлятор)
 - [Docker (тестовый кластер)](#docker-тестовый-кластер)
 - [Git Flow](#git-flow)
 
@@ -562,6 +563,25 @@ go test ./... -cover
 Подробнее: [docs/TESTING.md](docs/TESTING.md) (интеграция с агентом, ручные сценарии UI).
 
 Покрыты `AlertService` (пороги алертов) и типы `pkg/agentapi`.
+
+---
+
+## Тестирование desktop (ОС, ФС, инсталлятор)
+
+Для десктопного приложения (Wails):
+
+```bash
+chmod +x scripts/desktop/*.sh
+./scripts/desktop/run-all-desktop-tests.sh
+```
+
+| Направление | Скрипт / тесты |
+|-------------|----------------|
+| Инсталлятор (сборка, PATH, `ldd`) | `scripts/desktop/check-install.sh` |
+| Совместимость ОС (Ubuntu/Debian, GTK, WebKit) | `scripts/desktop/check-os-compat.sh` |
+| Файловая система (LevelDB в `~/.config/clusterguard`) | `scripts/desktop/check-filesystem.sh`, `go test ./internal/repository/leveldb/...` |
+
+Подробные тест-кейсы: [docs/DESKTOP-TESTING.md](docs/DESKTOP-TESTING.md).
 
 ---
 
