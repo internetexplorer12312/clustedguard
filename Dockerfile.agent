@@ -1,0 +1,18 @@
+# ClusterGuard Agent — образ для мониторинга ноды
+FROM golang:1.23-bookworm AS builder
+WORKDIR /src
+COPY go.mod go.sum ./
+COPY pkg/ pkg/
+COPY agent/ agent/
+RUN CGO_ENABLED=0 go build -o /clusterguard-agent ./agent
+
+FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /clusterguard-agent /usr/local/bin/clusterguard-agent
+ENV CLUSTERGUARD_TOKEN=dev-token-change-me
+EXPOSE 9100
+HEALTHCHECK --interval=15s --timeout=3s --start-period=5s \
+  CMD curl -fsS http://127.0.0.1:9100/health || exit 1
+ENTRYPOINT ["/usr/local/bin/clusterguard-agent"]
+CMD ["-addr", ":9100"]

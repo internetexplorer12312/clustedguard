@@ -1,0 +1,36 @@
+# Воспроизводимое окружение для тестирования ClusterGuard
+# Агенты на портах 9101–9103 имитируют три ноды кластера.
+#
+# Запуск:  docker compose up -d --build
+# Проверка: curl -H "X-ClusterGuard-Token: dev-token-change-me" http://localhost:9101/metrics
+
+services:
+  agent-node1:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    container_name: clusterguard-agent-node1
+    ports:
+      - "9101:9100"
+    environment:
+      CLUSTERGUARD_TOKEN: dev-token-change-me
+
+  agent-node2:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    container_name: clusterguard-agent-node2
+    ports:
+      - "9102:9100"
+    environment:
+      CLUSTERGUARD_TOKEN: dev-token-change-me
+
+  agent-node3:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    container_name: clusterguard-agent-node3
+    ports:
+      - "9103:9100"
+    environment:
+      CLUSTERGUARD_TOKEN: dev-token-change-me
