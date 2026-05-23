@@ -49,6 +49,14 @@ curl -s -o /dev/null -w "%{http_code}\n" -H "X-ClusterGuard-Token: wrong" http:/
 
 После `docker compose up -d --build` добавьте в desktop-приложение серверы `127.0.0.1:9101`, `9102`, `9103` с токеном `dev-token-change-me`.
 
+## Desktop: инсталлятор, ОС, файловая система
+
+См. **[DESKTOP-TESTING.md](DESKTOP-TESTING.md)** и скрипты `scripts/desktop/`:
+
+```bash
+./scripts/desktop/run-all-desktop-tests.sh
+```
+
 ## Системное тестирование (UI)
 
 1. Запустите агент(ы) или Docker Compose.
