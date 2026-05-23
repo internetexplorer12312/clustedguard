@@ -1,0 +1,20 @@
+# Сборка desktop-приложения (требует libwebkit2gtk на хосте при docker build)
+# Рекомендуется: wails build на хосте; этот образ — для CI/воспроизводимости сборки агента.
+FROM golang:1.23-bookworm AS go-builder
+WORKDIR /src
+COPY . .
+RUN CGO_ENABLED=0 go build -o /clusterguard-agent ./agent
+
+FROM node:18-bookworm AS frontend
+WORKDIR /app
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build
+
+# Финальный слой: только артефакты (desktop собирается на хосте с Wails)
+FROM debian:bookworm-slim
+COPY --from=go-builder /clusterguard-agent /usr/local/bin/
+COPY --from=frontend /app/dist /opt/clusterguard/frontend-dist
+WORKDIR /opt/clusterguard
+CMD ["echo", "Используйте wails build на хосте; frontend-dist и agent включены в образ"]
